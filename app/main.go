@@ -19,7 +19,7 @@ func main() {
 		fmt.Println("Error accepting connection:", err.Error())
 		os.Exit(1)
 	}
-	request := []byte{}
+	request := make([]byte, 1024)
 	n, err := conn.Read(request)
 	if err != nil {
 		log.Fatalf("%v", err.Error())
