@@ -32,10 +32,10 @@ func main() {
 
 	_, err = conn.Write(messageSize)
 	if err != nil {
-		log.Fatalf("%v", err.Error())
+		log.Fatalf("1:%v", err.Error())
 	}
 	_, err = conn.Write(request[8:12])
 	if err != nil {
-		log.Fatalf("%v", err.Error())
+		log.Fatalf("2:%v", err.Error())
 	}
 }
