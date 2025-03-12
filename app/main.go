@@ -17,6 +17,5 @@ func main() {
 		fmt.Println("Error accepting connection: ", err.Error())
 		os.Exit(1)
 	}
-	fmt.Println(conn.RemoteAddr().String())
 	conn.Write([]byte{0, 0, 0, 7})
 }
