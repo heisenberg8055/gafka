@@ -18,7 +18,8 @@ func main() {
 		fmt.Println("Error accepting connection: ", err.Error())
 		os.Exit(1)
 	}
-	conn.Read([]byte{})
+	brr := []byte{}
+	conn.Read(brr)
 	arr := []byte{}
 	val := binary.BigEndian.AppendUint32(arr, 7)
 	conn.Write(val)
