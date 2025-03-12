@@ -33,8 +33,8 @@ func main() {
 	if err != nil {
 		log.Fatalf("1:%v", err.Error())
 	}
-	// _, err = conn.Write(request[8:12])
-	// if err != nil {
-	// 	log.Fatalf("2:%v", err.Error())
-	// }
+	_, err = conn.Write(request[8:12])
+	if err != nil {
+		log.Fatalf("2:%v", err.Error())
+	}
 }
