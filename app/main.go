@@ -24,7 +24,7 @@ func main() {
 	if err != nil {
 		log.Fatalf("%v", err.Error())
 	}
-	fmt.Printf("Read %d bytes: %v\n", n, string(request))
+	fmt.Printf("Read %d bytes: \n", n)
 
 	messageSize := make([]byte, 4)
 	binary.BigEndian.PutUint32(messageSize, 0)
