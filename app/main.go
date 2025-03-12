@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/binary"
 	"fmt"
+	"log"
 	"net"
 	"os"
 )
@@ -10,22 +11,31 @@ import (
 func main() {
 	l, err := net.Listen("tcp", "0.0.0.0:9092")
 	if err != nil {
-		fmt.Println("Failed to bind to port 9092")
+		fmt.Println("Failed to port 9092")
 		os.Exit(1)
 	}
 	conn, err := l.Accept()
 	if err != nil {
-		fmt.Println("Error accepting connection: ", err.Error())
+		fmt.Println("Error accepting connection:", err.Error())
 		os.Exit(1)
 	}
-	brr := []byte{}
-	_, err = conn.Read(brr)
+	var request []byte
+	fmt.Println("Connected client address", conn.RemoteAddr())
+	n, err := conn.Read(request)
 	if err != nil {
-		fmt.Println("Error reading request: ", err.Error())
-		os.Exit(1)
+		log.Fatalf("%v", err.Error())
 	}
-	arr := []byte{}
-	arr = binary.BigEndian.AppendUint32(arr, 0)
-	arr = binary.BigEndian.AppendUint32(arr, 7)
-	conn.Write(arr)
+	fmt.Printf("Read %d bytes: %v\n", n, string(request))
+
+	messageSize := make([]byte, 4)
+	binary.BigEndian.PutUint32(messageSize, 0)
+
+	_, err = conn.Write(messageSize)
+	if err != nil {
+		log.Fatalf("%v", err.Error())
+	}
+	_, err = conn.Write(request[4:8])
+	if err != nil {
+		log.Fatalf("%v", err.Error())
+	}
 }
