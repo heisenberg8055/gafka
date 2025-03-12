@@ -18,5 +18,5 @@ func main() {
 		os.Exit(1)
 	}
 	fmt.Println(conn.RemoteAddr().String())
-	conn.Write([]byte{7})
+	conn.Write([]byte{0, 0, 0, 7})
 }
