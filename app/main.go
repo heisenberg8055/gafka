@@ -24,7 +24,7 @@ func main() {
 	if err != nil {
 		log.Fatalf("%v", err.Error())
 	}
-	fmt.Printf("Read %d bytes: %v\n, %d", n, string(request), len(request))
+	fmt.Printf("Read %d bytes: %v\n", n, string(request))
 
 	messageSize := make([]byte, 4)
 	binary.BigEndian.PutUint32(messageSize, 0)
@@ -33,8 +33,8 @@ func main() {
 	if err != nil {
 		log.Fatalf("1:%v", err.Error())
 	}
-	_, err = conn.Write(request[8:12])
-	if err != nil {
-		log.Fatalf("2:%v", err.Error())
-	}
+	// _, err = conn.Write(request[8:12])
+	// if err != nil {
+	// 	log.Fatalf("2:%v", err.Error())
+	// }
 }
