@@ -25,6 +25,7 @@ func main() {
 		os.Exit(1)
 	}
 	arr := []byte{}
-	val := binary.BigEndian.AppendUint32(arr, 7)
-	conn.Write(val)
+	arr = binary.BigEndian.AppendUint32(arr, 0)
+	arr = binary.BigEndian.AppendUint32(arr, 7)
+	conn.Write(arr)
 }
