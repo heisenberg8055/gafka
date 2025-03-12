@@ -29,7 +29,7 @@ func main() {
 	messageSize := make([]byte, 4)
 	binary.BigEndian.PutUint32(messageSize, 0)
 
-	_, err = conn.Write(messageSize)
+	_, err = conn.Write(request[0:4])
 	if err != nil {
 		log.Fatalf("1:%v", err.Error())
 	}
@@ -38,7 +38,7 @@ func main() {
 		log.Fatalf("2:%v", err.Error())
 	}
 	errorCode := make([]byte, 2)
-	binary.BigEndian.PutUint16(errorCode, 35)
+	binary.BigEndian.PutUint16(errorCode, 0)
 	_, err = conn.Write(errorCode)
 	if err != nil {
 		log.Fatalf("3:%v", err.Error())
