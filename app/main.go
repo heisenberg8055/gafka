@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/binary"
 	"fmt"
 	"net"
 	"os"
@@ -17,5 +18,7 @@ func main() {
 		fmt.Println("Error accepting connection: ", err.Error())
 		os.Exit(1)
 	}
-	conn.Write([]byte{0, 0, 0, 7})
+	arr := []byte{}
+	val := binary.BigEndian.AppendUint32(arr, 7)
+	conn.Write(val)
 }
