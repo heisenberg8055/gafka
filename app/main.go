@@ -19,7 +19,11 @@ func main() {
 		os.Exit(1)
 	}
 	brr := []byte{}
-	conn.Read(brr)
+	_, err = conn.Read(brr)
+	if err != nil {
+		fmt.Println("Error reading request: ", err.Error())
+		os.Exit(1)
+	}
 	arr := []byte{}
 	val := binary.BigEndian.AppendUint32(arr, 7)
 	conn.Write(val)
