@@ -22,7 +22,7 @@ func main() {
 	request := make([]byte, 1024)
 	n, err := conn.Read(request)
 	if err != nil {
-		log.Fatalf("%v", err.Error())
+		log.Fatalf("n%v", err.Error())
 	}
 	fmt.Printf("Read %d bytes: \n", n)
 
