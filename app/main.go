@@ -37,4 +37,10 @@ func main() {
 	if err != nil {
 		log.Fatalf("2:%v", err.Error())
 	}
+	errorCode := make([]byte, 2)
+	binary.BigEndian.PutUint16(errorCode, 35)
+	_, err = conn.Write(errorCode)
+	if err != nil {
+		log.Fatalf("3:%v", err.Error())
+	}
 }
