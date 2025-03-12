@@ -20,12 +20,11 @@ func main() {
 		os.Exit(1)
 	}
 	var request []byte
-	fmt.Println("Connected client address", conn.RemoteAddr())
 	n, err := conn.Read(request)
 	if err != nil {
 		log.Fatalf("%v", err.Error())
 	}
-	fmt.Printf("Read %d bytes: %v\n", n, string(request))
+	fmt.Printf("Read %d bytes: %v\n, %d", n, string(request), len(request))
 
 	messageSize := make([]byte, 4)
 	binary.BigEndian.PutUint32(messageSize, 0)
