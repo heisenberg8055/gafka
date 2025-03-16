@@ -65,6 +65,15 @@ func main() {
 	responseMessageArray := make([]byte, 4)
 	binary.BigEndian.PutUint32(responseMessageArray, uint32(responseMessageSize))
 
+	response = append(response, 0)
+
+	//trottle time
+	tt := make([]byte, 4)
+	binary.BigEndian.PutUint32(apiMax, 0)
+	response = append(response, tt...)
+
+	response = append(response, 0)
+
 	_, err = conn.Write(responseMessageArray)
 	if err != nil {
 		log.Fatalf("1:%v", err.Error())
