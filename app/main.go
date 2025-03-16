@@ -29,7 +29,7 @@ func main() {
 	messageSize := make([]byte, 4)
 	binary.BigEndian.PutUint32(messageSize, 0)
 
-	response := make([]byte, 19)
+	response := []byte{}
 
 	// // Message_size
 	// _, err = conn.Write(request[0:4])
@@ -41,21 +41,34 @@ func main() {
 	response = append(response, request[8:12]...)
 
 	// error_code
-	binary.BigEndian.PutUint16(response, 0)
+	errorCode := make([]byte, 2)
+	binary.BigEndian.PutUint16(errorCode, 0)
+	response = append(response, errorCode...)
 
-	// Tagged Field Encodings
 	response = append(response, 2)
 
 	// api keys
-	binary.BigEndian.PutUint16(response, 18)
+	apiKeyIndex := make([]byte, 2)
+	binary.BigEndian.PutUint16(apiKeyIndex, 18)
+	response = append(response, apiKeyIndex...)
 
-	binary.BigEndian.PutUint16(response, 3)
+	apiMin := make([]byte, 2)
+	binary.BigEndian.PutUint16(apiMin, 3)
+	response = append(response, apiMin...)
 
-	binary.BigEndian.PutUint16(response, 4)
+	apiMax := make([]byte, 2)
+	binary.BigEndian.PutUint16(apiMax, 4)
+	response = append(response, apiMax...)
 
-	response = append(response, 0)
-	binary.BigEndian.PutUint32(response, 0)
-	response = append(response, 2)
+	responseMessageSize := len(response)
+
+	responseMessageArray := make([]byte, 4)
+	binary.BigEndian.PutUint32(responseMessageArray, uint32(responseMessageSize))
+
+	_, err = conn.Write(responseMessageArray)
+	if err != nil {
+		log.Fatalf("1:%v", err.Error())
+	}
 
 	_, err = conn.Write(response)
 	if err != nil {
