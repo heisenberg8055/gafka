@@ -37,12 +37,6 @@ func handleConnection(conn net.Conn) {
 		response := []byte{}
 		apiVersion := request[6:8]
 
-		// Message_size
-		// _, err = conn.Write(request[0:4])
-		// if err != nil {
-		// 	log.Fatalf("1:%v", err.Error())
-		// }
-
 		apiVer := binary.BigEndian.Uint16(apiVersion)
 
 		switch {
@@ -64,7 +58,7 @@ func handleConnection(conn net.Conn) {
 			response = append(response, apiKeyIndex...)
 
 			apiMin := make([]byte, 2)
-			binary.BigEndian.PutUint16(apiMin, 3)
+			binary.BigEndian.PutUint16(apiMin, 0)
 			response = append(response, apiMin...)
 
 			apiMax := make([]byte, 2)
