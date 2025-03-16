@@ -129,6 +129,48 @@ func handleConnection(conn net.Conn) {
 			}
 		case 75:
 
+			response = append(response, request[8:12]...)
+
+			response = append(response, 0)
+
+			tt := make([]byte, 4)
+			binary.BigEndian.PutUint32(tt, 0)
+			response = append(response, tt...)
+
+			response = append(response, 2)
+
+			// error_code
+			errorCode := make([]byte, 2)
+			binary.BigEndian.PutUint16(errorCode, 3)
+			response = append(response, errorCode...)
+
+			response = append(response, 4)
+
+			response = append(response, request[26:29]...)
+
+			topicID := make([]byte, 16)
+			binary.BigEndian.PutUint16(topicID, 0)
+			response = append(response, topicID...)
+
+			isInternal := make([]byte, 1)
+			binary.BigEndian.PutUint16(isInternal, 0)
+			response = append(response, isInternal...)
+
+			partitionArraypartitions := make([]byte, 1)
+			binary.BigEndian.PutUint16(partitionArraypartitions, 1)
+			response = append(response, partitionArraypartitions...)
+
+			responseLength := len(response)
+			responseMessageArray := make([]byte, 4)
+			binary.BigEndian.PutUint32(responseMessageArray, uint32(responseLength))
+			_, err = conn.Write(responseMessageArray)
+			if err != nil {
+				log.Fatalf("1:%v", err.Error())
+			}
+			_, err = conn.Write(response)
+			if err != nil {
+				log.Fatalf("1:%v", err.Error())
+			}
 		}
 
 	}
