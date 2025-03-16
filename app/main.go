@@ -153,7 +153,7 @@ func handleConnection(conn net.Conn) {
 			response = append(response, topicID...)
 
 			// isInternal
-			response = append(response, 0)
+			// response = append(response, 0)
 
 			// partitionArray
 			response = append(response, 1)
