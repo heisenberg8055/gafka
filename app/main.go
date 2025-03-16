@@ -146,7 +146,9 @@ func handleConnection(conn net.Conn) {
 
 			response = append(response, 4)
 
-			response = append(response, request[26:29]...)
+			topicLength := int(request[25])
+
+			response = append(response, request[26:26+topicLength]...)
 
 			topicID := make([]byte, 16)
 			binary.BigEndian.PutUint16(topicID, 0)
