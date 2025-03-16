@@ -27,7 +27,7 @@ func main() {
 
 func handleConnection(conn net.Conn) {
 	for {
-		request := []byte{}
+		request := make([]byte, 1024)
 		n, err := conn.Read(request)
 		if err != nil {
 			log.Fatalf("n%v", err.Error())
@@ -35,7 +35,7 @@ func handleConnection(conn net.Conn) {
 		fmt.Printf("Read %d bytes: \n", n)
 
 		test := request[:]
-		fmt.Printf("test %v", string(test))
+		fmt.Printf("test %v, length:%d", string(test), len(request))
 
 		response := []byte{}
 		apiKey := request[4:6]
