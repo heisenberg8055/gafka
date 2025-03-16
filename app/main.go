@@ -74,6 +74,16 @@ func handleConnection(conn net.Conn) {
 
 			response = append(response, 0)
 
+			// DescribeTopicPartitions
+
+			binary.BigEndian.PutUint16(response, 75)
+
+			binary.BigEndian.PutUint16(response, 0)
+
+			binary.BigEndian.PutUint16(response, 0)
+
+			response = append(response, 0)
+
 			responseMessageSize := len(response)
 
 			responseMessageArray := make([]byte, 4)
