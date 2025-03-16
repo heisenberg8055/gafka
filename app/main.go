@@ -70,6 +70,8 @@ func main() {
 		log.Fatalf("1:%v", err.Error())
 	}
 
+	fmt.Println(responseMessageSize)
+
 	_, err = conn.Write(response)
 	if err != nil {
 		log.Fatalf("1:%v", err.Error())
