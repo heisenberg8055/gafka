@@ -50,7 +50,7 @@ func handleConnection(conn net.Conn) {
 			binary.BigEndian.PutUint16(errorCode, 0)
 			response = append(response, errorCode...)
 
-			response = append(response, 2)
+			response = append(response, 3)
 
 			// api keys
 			apiKeyIndex := make([]byte, 2)
