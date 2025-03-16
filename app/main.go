@@ -27,7 +27,7 @@ func main() {
 
 func handleConnection(conn net.Conn) {
 	for {
-		request := make([]byte, 1024)
+		request := []byte{}
 		n, err := conn.Read(request)
 		if err != nil {
 			log.Fatalf("n%v", err.Error())
