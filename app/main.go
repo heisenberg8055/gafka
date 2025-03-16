@@ -34,8 +34,7 @@ func handleConnection(conn net.Conn) {
 		}
 		fmt.Printf("Read %d bytes: \n", n)
 
-		test := request[:]
-		fmt.Printf("test %v, length:%d", string(test), len(request))
+		fmt.Printf("length:%d", len(request))
 
 		response := []byte{}
 		apiKey := request[4:6]
