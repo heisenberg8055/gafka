@@ -29,18 +29,57 @@ func main() {
 	messageSize := make([]byte, 4)
 	binary.BigEndian.PutUint32(messageSize, 0)
 
-	_, err = conn.Write(request[0:4])
+	response := []byte{}
+
+	// // Message_size
+	// _, err = conn.Write(request[0:4])
+	// if err != nil {
+	// 	log.Fatalf("1:%v", err.Error())
+	// }
+	// Api_version
+	// _, err = conn.Write(request[8:12])
+	// if err != nil {
+	// 	log.Fatalf("2:%v", err.Error())
+	// }
+	// error_code
+	errorCode := make([]byte, 2)
+	binary.BigEndian.PutUint16(errorCode, 0)
+	response = append(response, errorCode...)
+
+	// api keys
+	apiKeyIndex := make([]byte, 2)
+	binary.BigEndian.PutUint16(apiKeyIndex, 18)
+	response = append(response, apiKeyIndex...)
+
+	apiMin := make([]byte, 2)
+	binary.BigEndian.PutUint16(apiMin, 0)
+	response = append(response, apiMin...)
+
+	apiMax := make([]byte, 2)
+	binary.BigEndian.PutUint16(apiMax, 4)
+	response = append(response, apiMax...)
+
+	responseMessageSize := len(response)
+
+	responseMessageArray := make([]byte, 4)
+	binary.BigEndian.PutUint32(responseMessageArray, uint32(responseMessageSize))
+
+	_, err = conn.Write(responseMessageArray)
 	if err != nil {
 		log.Fatalf("1:%v", err.Error())
 	}
-	_, err = conn.Write(request[8:12])
+
+	_, err = conn.Write(response)
 	if err != nil {
-		log.Fatalf("2:%v", err.Error())
+		log.Fatalf("1:%v", err.Error())
 	}
-	errorCode := make([]byte, 2)
-	binary.BigEndian.PutUint16(errorCode, 0)
-	_, err = conn.Write(errorCode)
-	if err != nil {
-		log.Fatalf("3:%v", err.Error())
-	}
+
 }
+
+// ApiVersions Response (Version: 4) => error_code [api_keys] throttle_time_ms TAG_BUFFER
+//   error_code => INT16
+//   api_keys => api_key min_version max_version TAG_BUFFER
+//     api_key => INT16
+//     min_version => INT16
+//     max_version => INT16
+//   throttle_time_ms => INT32
