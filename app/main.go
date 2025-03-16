@@ -37,10 +37,10 @@ func main() {
 	// 	log.Fatalf("1:%v", err.Error())
 	// }
 	// Api_version
-	// _, err = conn.Write(request[8:12])
-	// if err != nil {
-	// 	log.Fatalf("2:%v", err.Error())
-	// }
+	_, err = conn.Write(request[8:12])
+	if err != nil {
+		log.Fatalf("2:%v", err.Error())
+	}
 	// error_code
 	errorCode := make([]byte, 2)
 	binary.BigEndian.PutUint16(errorCode, 0)
