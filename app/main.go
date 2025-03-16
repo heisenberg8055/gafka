@@ -34,8 +34,6 @@ func handleConnection(conn net.Conn) {
 		}
 		fmt.Printf("Read %d bytes: \n", n)
 
-		fmt.Printf("test:%v", string(request[:100]))
-
 		response := []byte{}
 		apiKey := request[4:6]
 		apiVersion := request[6:8]
@@ -159,6 +157,18 @@ func handleConnection(conn net.Conn) {
 
 			// partitionArray
 			response = append(response, 1)
+
+			// auth op
+
+			auth := make([]byte, 4)
+			binary.BigEndian.PutUint16(auth, 0x00000df8)
+			response = append(response, auth...)
+
+			response = append(response, 0)
+
+			response = append(response, 0xff)
+
+			response = append(response, 0)
 
 			responseLength := len(response)
 			responseMessageArray := make([]byte, 4)
