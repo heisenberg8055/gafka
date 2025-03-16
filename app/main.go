@@ -36,15 +36,16 @@ func main() {
 	// if err != nil {
 	// 	log.Fatalf("1:%v", err.Error())
 	// }
-	// Api_version
-	_, err = conn.Write(request[8:12])
-	if err != nil {
-		log.Fatalf("2:%v", err.Error())
-	}
+
+	// Correlation ID
+	response = append(response, request[8:12]...)
+
 	// error_code
 	errorCode := make([]byte, 2)
 	binary.BigEndian.PutUint16(errorCode, 0)
 	response = append(response, errorCode...)
+
+	response = append(response, 2)
 
 	// api keys
 	apiKeyIndex := make([]byte, 2)
@@ -52,22 +53,16 @@ func main() {
 	response = append(response, apiKeyIndex...)
 
 	apiMin := make([]byte, 2)
-	binary.BigEndian.PutUint16(apiMin, 0)
+	binary.BigEndian.PutUint16(apiMin, 3)
 	response = append(response, apiMin...)
 
 	apiMax := make([]byte, 2)
 	binary.BigEndian.PutUint16(apiMax, 4)
 	response = append(response, apiMax...)
 
-	responseMessageSize := len(response)
-
-	responseMessageArray := make([]byte, 4)
-	binary.BigEndian.PutUint32(responseMessageArray, uint32(responseMessageSize))
-
-	_, err = conn.Write(responseMessageArray)
-	if err != nil {
-		log.Fatalf("1:%v", err.Error())
-	}
+	response = append(response, 0)
+	binary.BigEndian.PutUint32(response, 0)
+	response = append(response, 2)
 
 	_, err = conn.Write(response)
 	if err != nil {
