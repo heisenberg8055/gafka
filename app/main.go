@@ -69,7 +69,7 @@ func main() {
 
 	//trottle time
 	tt := make([]byte, 4)
-	binary.BigEndian.PutUint32(apiMax, 0)
+	binary.BigEndian.PutUint32(tt, 0)
 	response = append(response, tt...)
 
 	response = append(response, 0)
