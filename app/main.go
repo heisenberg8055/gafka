@@ -35,93 +35,101 @@ func handleConnection(conn net.Conn) {
 		fmt.Printf("Read %d bytes: \n", n)
 
 		response := []byte{}
+		apiKey := request[4:6]
 		apiVersion := request[6:8]
 
 		apiVer := binary.BigEndian.Uint16(apiVersion)
+		apiKeyVer := binary.BigEndian.Uint16(apiKey)
 
-		switch {
-		case apiVer > 0 && apiVer < 5:
+		switch apiKeyVer {
+		case 18:
+			switch {
+			case apiVer > 0 && apiVer < 5:
 
-			// Correlation ID
-			response = append(response, request[8:12]...)
+				// Correlation ID
+				response = append(response, request[8:12]...)
 
-			// error_code
-			errorCode := make([]byte, 2)
-			binary.BigEndian.PutUint16(errorCode, 0)
-			response = append(response, errorCode...)
+				// error_code
+				errorCode := make([]byte, 2)
+				binary.BigEndian.PutUint16(errorCode, 0)
+				response = append(response, errorCode...)
 
-			response = append(response, 3)
+				response = append(response, 3)
 
-			// api keys
-			apiKeyIndex := make([]byte, 2)
-			binary.BigEndian.PutUint16(apiKeyIndex, 18)
-			response = append(response, apiKeyIndex...)
+				// api keys
+				apiKeyIndex := make([]byte, 2)
+				binary.BigEndian.PutUint16(apiKeyIndex, 18)
+				response = append(response, apiKeyIndex...)
 
-			apiMin := make([]byte, 2)
-			binary.BigEndian.PutUint16(apiMin, 0)
-			response = append(response, apiMin...)
+				apiMin := make([]byte, 2)
+				binary.BigEndian.PutUint16(apiMin, 0)
+				response = append(response, apiMin...)
 
-			apiMax := make([]byte, 2)
-			binary.BigEndian.PutUint16(apiMax, 4)
-			response = append(response, apiMax...)
+				apiMax := make([]byte, 2)
+				binary.BigEndian.PutUint16(apiMax, 4)
+				response = append(response, apiMax...)
 
-			response = append(response, 0)
+				response = append(response, 0)
 
-			// DescribeTopicPartitions
+				// DescribeTopicPartitions
 
-			apiKeyIndexD := make([]byte, 2)
-			binary.BigEndian.PutUint16(apiKeyIndexD, 75)
-			response = append(response, apiKeyIndexD...)
+				apiKeyIndexD := make([]byte, 2)
+				binary.BigEndian.PutUint16(apiKeyIndexD, 75)
+				response = append(response, apiKeyIndexD...)
 
-			apiMinD := make([]byte, 2)
-			binary.BigEndian.PutUint16(apiMinD, 0)
-			response = append(response, apiMinD...)
+				apiMinD := make([]byte, 2)
+				binary.BigEndian.PutUint16(apiMinD, 0)
+				response = append(response, apiMinD...)
 
-			apiMaxD := make([]byte, 2)
-			binary.BigEndian.PutUint16(apiMaxD, 0)
-			response = append(response, apiMaxD...)
+				apiMaxD := make([]byte, 2)
+				binary.BigEndian.PutUint16(apiMaxD, 0)
+				response = append(response, apiMaxD...)
 
-			response = append(response, 0)
+				response = append(response, 0)
 
-			//trottle time
-			tt := make([]byte, 4)
-			binary.BigEndian.PutUint32(tt, 0)
-			response = append(response, tt...)
+				//trottle time
+				tt := make([]byte, 4)
+				binary.BigEndian.PutUint32(tt, 0)
+				response = append(response, tt...)
 
-			response = append(response, 0)
+				response = append(response, 0)
 
-			responseMessageSize := len(response)
+				responseMessageSize := len(response)
 
-			responseMessageArray := make([]byte, 4)
-			binary.BigEndian.PutUint32(responseMessageArray, uint32(responseMessageSize))
+				responseMessageArray := make([]byte, 4)
+				binary.BigEndian.PutUint32(responseMessageArray, uint32(responseMessageSize))
 
-			_, err = conn.Write(responseMessageArray)
-			if err != nil {
-				log.Fatalf("1:%v", err.Error())
+				_, err = conn.Write(responseMessageArray)
+				if err != nil {
+					log.Fatalf("1:%v", err.Error())
+				}
+
+				_, err = conn.Write(response)
+				if err != nil {
+					log.Fatalf("1:%v", err.Error())
+				}
+			default:
+				response = append(response, request[8:12]...)
+				errorCode := make([]byte, 2)
+				binary.BigEndian.PutUint16(errorCode, 35)
+				response = append(response, errorCode...)
+				responseMessageSize := len(response)
+
+				responseMessageArray := make([]byte, 4)
+				binary.BigEndian.PutUint32(responseMessageArray, uint32(responseMessageSize))
+
+				_, err = conn.Write(responseMessageArray)
+				if err != nil {
+					log.Fatalf("1:%v", err.Error())
+				}
+				_, err = conn.Write(response)
+				if err != nil {
+					log.Fatalf("1:%v", err.Error())
+				}
 			}
+		case 75:
 
-			_, err = conn.Write(response)
-			if err != nil {
-				log.Fatalf("1:%v", err.Error())
-			}
-		default:
-			response = append(response, request[8:12]...)
-			errorCode := make([]byte, 2)
-			binary.BigEndian.PutUint16(errorCode, 35)
-			response = append(response, errorCode...)
-			responseMessageSize := len(response)
-
-			responseMessageArray := make([]byte, 4)
-			binary.BigEndian.PutUint32(responseMessageArray, uint32(responseMessageSize))
-
-			_, err = conn.Write(responseMessageArray)
-			if err != nil {
-				log.Fatalf("1:%v", err.Error())
-			}
-			_, err = conn.Write(response)
-			if err != nil {
-				log.Fatalf("1:%v", err.Error())
-			}
 		}
+
 	}
 }
