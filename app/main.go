@@ -67,20 +67,26 @@ func handleConnection(conn net.Conn) {
 
 			response = append(response, 0)
 
+			// DescribeTopicPartitions
+
+			apiKeyIndexD := make([]byte, 2)
+			binary.BigEndian.PutUint16(apiKeyIndexD, 75)
+			response = append(response, apiKeyIndexD...)
+
+			apiMinD := make([]byte, 2)
+			binary.BigEndian.PutUint16(apiMinD, 0)
+			response = append(response, apiMinD...)
+
+			apiMaxD := make([]byte, 2)
+			binary.BigEndian.PutUint16(apiMaxD, 0)
+			response = append(response, apiMaxD...)
+
+			response = append(response, 0)
+
 			//trottle time
 			tt := make([]byte, 4)
 			binary.BigEndian.PutUint32(tt, 0)
 			response = append(response, tt...)
-
-			response = append(response, 0)
-
-			// DescribeTopicPartitions
-
-			binary.BigEndian.PutUint16(response, 75)
-
-			binary.BigEndian.PutUint16(response, 0)
-
-			binary.BigEndian.PutUint16(response, 0)
 
 			response = append(response, 0)
 
