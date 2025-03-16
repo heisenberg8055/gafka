@@ -60,11 +60,6 @@ func main() {
 	binary.BigEndian.PutUint16(apiMax, 4)
 	response = append(response, apiMax...)
 
-	responseMessageSize := len(response)
-
-	responseMessageArray := make([]byte, 4)
-	binary.BigEndian.PutUint32(responseMessageArray, uint32(responseMessageSize))
-
 	response = append(response, 0)
 
 	//trottle time
@@ -73,6 +68,11 @@ func main() {
 	response = append(response, tt...)
 
 	response = append(response, 0)
+
+	responseMessageSize := len(response)
+
+	responseMessageArray := make([]byte, 4)
+	binary.BigEndian.PutUint32(responseMessageArray, uint32(responseMessageSize))
 
 	_, err = conn.Write(responseMessageArray)
 	if err != nil {
