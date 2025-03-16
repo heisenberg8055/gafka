@@ -152,9 +152,8 @@ func handleConnection(conn net.Conn) {
 			binary.BigEndian.PutUint16(topicID, 0)
 			response = append(response, topicID...)
 
-			isInternal := make([]byte, 1)
-			binary.BigEndian.PutUint16(isInternal, 0)
-			response = append(response, isInternal...)
+			// isInternal
+			response = append(response, 0)
 
 			// partitionArray
 			response = append(response, 1)
